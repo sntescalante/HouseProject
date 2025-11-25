@@ -1,8 +1,10 @@
 export default function Room2() {
     return (
-        <div style={{ padding: "40px" }}>
-            <h1>Cuarto 2</h1>
-            <p>Página placeholder para el Cuarto 2.</p>
+        <div>
+            <h1 className="mb-4">Cuarto 2</h1>
+            <div className="alert alert-info">
+                Página en construcción.
+            </div>
         </div>
     );
 }
