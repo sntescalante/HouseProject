@@ -34,6 +34,7 @@ def on_connect(client, userdata, flags, rc):
     for t in MQTT_TOPIC:
         client.subscribe(t)
 
+#-----------Obtain TOPIC AND VALUE --------------
 def on_message(client, userdata, msg):
     try:
         topic = msg.topic
@@ -47,6 +48,7 @@ def on_message(client, userdata, msg):
 # ------------------ FUNCTION TO STORE DATA IN SQL DATABASE ------------------
 def save_to_db(topic, value):
     try:
+        #Topic example: TEAM5/Room1/Sensor/BMP280
         parts = topic.split('/')  
         location_str = parts[1]         # Room
         device_kind = parts[2]          # Sensor or actuator
@@ -94,17 +96,16 @@ def save_to_db(topic, value):
                         VALUES (%s, %s)
                     """, (actuator_id, value))
 
-                    print(f"[SQL] ACTUATOR → {device_type} (ID {actuator_id}) = {value}")
                     return
                 else:
-                    print("[WARN] Actuador no encontrado en BD.")
+                    print("ACTUATOR NOT FOUND!!!")
                     return
 
             else:
-                print("[WARN] Topic desconocido →", topic)
+                print("UNKOKN TOPIC: ", topic)
 
     except Exception as e:
-        print("Error al guardar en MySQL:", e)
+        print("COULDN'T BE SAVED TO DB: ", e)
 
 # ------------------ MQTT CLIENT ------------------
 
