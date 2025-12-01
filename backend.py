@@ -224,6 +224,32 @@ async def ws_handler(websocket, path):
                     "message": f"MQTT enviado: {topic} → {value}"
                 }))
 
+            # ======================================================
+            # === NUEVO: React pide graficas por tipo de sensor ===
+            # ======================================================
+            elif action == "get_graph":
+                sensor_type = data.get("sensor_type")  # ej. "BMP280", "LDR"
+
+                with connection.cursor() as cursor:
+                    cursor.execute("""
+                        SELECT sr.Value, sr.Timestamp 
+                        FROM sensorreadings sr
+                        JOIN sensor s ON sr.SensorID = s.SensorID
+                        WHERE s.Type = %s
+                        ORDER BY sr.Timestamp DESC
+                        LIMIT 100
+                    """, (sensor_type,))
+                    
+                    result = cursor.fetchall()
+
+                # regresamos datos listos para gráficas
+                await websocket.send(json.dumps({
+                    "type": "graph_data",
+                    "sensor_type": sensor_type,
+                    "labels": [str(r["Timestamp"]) for r in result][::-1],
+                    "values": [float(r["Value"]) for r in result][::-1]
+                }))
+
     except ConnectionClosed:
         print(f"Cliente desconectado de {room}")
 
