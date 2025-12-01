@@ -3,10 +3,10 @@ import pymysql
 import json
 
 # ----------- Config MQTT -----------
-MQTT_BROKER = "localhost"
+MQTT_BROKER = "test.mosquitto.org"
 MQTT_PORT = 1883
 MQTT_TOPIC = ["TEAM5/room1/actuator/OLED",
-            "TEAM5/room1/sensor/BMP2080",
+            "TEAM5/room1/sensor/BMP280",
             "TEAM5/room1/sensor/Distance",
             "TEAM5/room1/actuator/Buzzer",
             "TEAM5/room2/sensor/RFID",
@@ -23,7 +23,7 @@ connection = pymysql.connect(
     host="localhost",
     user="root",
     password="",
-    database="",
+    database="houseproject",
     cursorclass=pymysql.cursors.DictCursor,
     autocommit=True
 )
@@ -45,10 +45,10 @@ def on_message(client, userdata, msg):
     except Exception as e:
         print("Error procesando mensaje:", e)
 
-# ------------------ FUNCTION TO STORE DATA IN SQL DATABASE ------------------
+# ------------------ FU     NCTION TO STORE DATA IN SQL DATABASE ------------------
 def save_to_db(topic, value):
     try:
-        #Topic example: TEAM5/Room1/Sensor/BMP280
+        #Topic example: TEAM5/room1/Sensor/BMP280
         parts = topic.split('/')  
         location_str = parts[1]         # Room
         device_kind = parts[2]          # Sensor or actuator
