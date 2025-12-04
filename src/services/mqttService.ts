@@ -2,7 +2,7 @@
 console.log("🟦 mqttService.ts CARGADO DESDE:", import.meta.url);
 import mqtt from "mqtt";
 
-const MQTT_URL = "wss://broker.emqx.io:8084/mqtt";
+const MQTT_URL = "wss://test.mosquitto.org:8081";
 const MQTT_TOPIC = "TEAM5/test/log";
 
 const client = mqtt.connect(MQTT_URL, {
@@ -19,7 +19,7 @@ client.on("error", (err) => {
   console.error("MQTT Error:", err);
 });
 
-export const publishMqttMessage = (msg: string) => {
-  console.log("📤 Publicando:", msg);
-  client.publish(MQTT_TOPIC, msg);
+export const publishMqttMessage = (topic: string, msg: string) => {
+  console.log(`📤 Publicando en ${topic}:`, msg);
+  client.publish(topic, msg);
 };
